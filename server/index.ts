@@ -20,11 +20,10 @@ app.get('*all', async (req: Request, res: Response, next: NextFunction) => {
     try {
 
         let template = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
-
         template = await vite.transformIndexHtml(url, template);
         const { render } = await vite.ssrLoadModule(path.resolve(__dirname, '../client/entry-server.tsx'));
         const appHtml = await render(url);
-        const html = template.replace(`<!--ssr-outlet-->`, () => appHtml)
+        const html = template.replace(`<!--ssr-outlet-->`, () => appHtml.html)
 
         res.status(200).send(html);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
