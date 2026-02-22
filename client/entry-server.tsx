@@ -1,16 +1,18 @@
+import React from "react"
 import {renderToString} from "react-dom/server";
-import {StrictMode} from "react";
 import App from "./App.tsx";
+import {StaticRouter} from "react-router";
+import {ToastContainer} from "react-toastify";
 
-/**
- * @param {string} _url
- */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function render(_url: string) {
+export function render(url: string) {
+    console.log(url);
     const html = renderToString(
-        <StrictMode>
-            <App />
-        </StrictMode>,
+        <React.StrictMode>
+            <StaticRouter location={url}>
+                <ToastContainer />
+                <App />
+            </StaticRouter>
+        </React.StrictMode>,
     )
     return { html }
 }

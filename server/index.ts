@@ -1,39 +1,56 @@
-import express, {type Express, type NextFunction, type Request, type Response} from 'express';
+import express, {type Express, type Request, type Response} from 'express';
+import { createServer } from 'http';
 import fs from "node:fs";
 import { fileURLToPath } from 'node:url'
-import {createServer as createViteServer, type ViteDevServer} from 'vite'
 import path from "node:path";
+import { createServer as createViteServer } from "vite";
+import ReChaptchaServices from "./common/ReChaptcha/ReChaptcha.ts";
+import EmailServices from "./common/EmailServices/EmailServices.ts";
+import KapcsolatServices from "./PublicServices/kapcsolat/KapcsolatServices.tsx";
 
 const __dirname: string = path.dirname(fileURLToPath(import.meta.url));
 const app: Express = express();
-const vite: ViteDevServer = await createViteServer({
+
+const host = process.env.HOST || 'localhost';
+const port = process.env.PORT || 3100;
+
+const server = createServer(app)
+
+const vite = await createViteServer({
     server: { middlewareMode: true },
     appType: 'custom'
 })
-app.use(vite.middlewares);
+
+app.use(vite.middlewares)
 
 app.use('/static', express.static('dist'));
 
-app.get('*all', async (req: Request, res: Response, next: NextFunction) => {
+app.get('/api/hello', async (req, res) => {
+    console.log(req.url)
+    res.status(200).send({ msg: "Hello World" });
+})
+
+app.use("/api/mail", EmailServices);
+app.use("/api/recaptcha", ReChaptchaServices);
+app.use("/api/kapcsolat", KapcsolatServices);
+
+app.get('*all', async (req: Request, res: Response) => {
     const url: string = req.originalUrl;
-
     try {
-
         let template = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
         template = await vite.transformIndexHtml(url, template);
         const { render } = await vite.ssrLoadModule(path.resolve(__dirname, '../client/entry-server.tsx'));
         const appHtml = await render(url);
         const html = template.replace(`<!--ssr-outlet-->`, () => appHtml.html)
-
         res.status(200).send(html);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    } catch (error: Error) {
-        vite.ssrFixStacktrace(error);
-        next(error);
+    } catch (error) {
+        res.status(500).send(error)
+        console.log("SERVER CATCH ERROR: ", error);
     }
 });
 
-app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+
+
+server.listen(port, () => {
+    console.log(`Server is running on http://${host}:${port}`);
 });

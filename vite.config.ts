@@ -1,10 +1,13 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import viteReact from "@vitejs/plugin-react"
 
 export default defineConfig({
-    plugins: [react()],
+    plugins: [viteReact()],
+    ssr: {
+        noExternal: ['react-router']
+    },
     build: {
-        ssr: true,
+        ssr: false,
         rollupOptions: {
             input: './server/index.ts',
         },

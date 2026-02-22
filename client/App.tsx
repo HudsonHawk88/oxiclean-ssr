@@ -1,10 +1,16 @@
 import React from "react";
+import {AppRoutes} from "./routes/Routes.tsx"
+import {toast} from "react-toastify";
+import type {IToastType} from "./interfaces/main";
+
+const notify = (type: IToastType, msg: string) => {
+    toast(msg, { type });
+}
+
 function App(): React.ReactElement {
+
     return (
-        <div>
-            <h1>Welcome to React 19 SSR with Vite</h1>
-            <p>This is rendered!</p>
-        </div>
+        <AppRoutes notify={notify} />
     );
 }
 
