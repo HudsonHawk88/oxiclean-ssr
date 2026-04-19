@@ -10,7 +10,8 @@
     "build": "npm run build:client && npm run build:server",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prod": "npx pm2 start server/server.config.cjs --env production"
+    "prod": "npx pm2 start server/server.config.cjs --env production",
+    "stop-prod": "npx pm2 stop oxiclean && npx pm2 delete oxiclean"
   },
   "dependencies": {
     "body-parser": "^2.2.2",
