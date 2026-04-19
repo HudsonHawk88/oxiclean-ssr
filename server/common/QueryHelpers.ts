@@ -10,7 +10,7 @@ import {fileURLToPath} from "node:url";
 import dotenvExpand from 'dotenv-expand';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
-const envPath: string = path.resolve((dirname), "../../.env");
+const envPath: string = path.resolve((dirname), "../.env");
 
 dotenvExpand.expand(dotenv.config({
     path: envPath,

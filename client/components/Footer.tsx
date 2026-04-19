@@ -4,7 +4,7 @@ function Footer(): React.ReactElement {
     return (
         <footer className="contact-footer">
             <div><strong>Telefon:</strong> +36 30 923 6736</div>
-            <div><strong>Email:</strong> oxigentisztitas@gmail.com</div>
+            <div><strong>Email:</strong> info@oxiclean.hu</div>
         </footer>
     );
 }

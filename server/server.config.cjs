@@ -5,7 +5,7 @@ module.exports = {
     apps: [
         {
             name: 'oxiclean',
-            script: path.resolve(__dirname, '../dist/server/entry-server.js'),
+            script: path.resolve(__dirname, '../dist/server.js'),
             instances: 'max',
             exec_mode: 'cluster'
         }

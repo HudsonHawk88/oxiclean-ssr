@@ -206,7 +206,7 @@ function Elerhetosegek(props: {
                                     required
                                 />
                                 <label htmlFor="privacyPolicy">
-                                    Elolvastam és elfogadom az <a href="/adatkezeles" target="_blank">Adatkezelési Tájékoztatót</a>.
+                                    Elolvastam és elfogadom az <a href="/static/docs/adatkezelesi.pdf" target="_blank">Adatkezelési Tájékoztatót</a>.
                                 </label>
                             </div>
 

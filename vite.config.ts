@@ -1,24 +1,22 @@
 import { defineConfig } from 'vite';
 import viteReact from "@vitejs/plugin-react"
-import { resolve } from 'node:path'
 
-export default defineConfig({
+
+export default defineConfig(({ isSsrBuild }) => ({
     plugins: [viteReact()],
-    base: '/',
     ssr: {
         noExternal: ['react-router']
     },
     build: {
-        ssr: true,
+        outDir: isSsrBuild ? 'dist/server' : 'dist/client',
         rollupOptions: {
-            input: {
-                main: resolve(import.meta.dirname, 'index.html')
-            },
-        },
+            // Csak SSR build esetén adjuk meg a szerver oldali belépőt
+            input: isSsrBuild ? 'client/entry-server.tsx' : 'index.html'
+        }
     },
     optimizeDeps: { exclude: ["fsevents"] },
     server: {
         host: "127.0.0.1",
-        port: 8080,
+        port: 3001,
     }
-});
+}));
