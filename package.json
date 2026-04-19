@@ -5,12 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch server/index.ts",
-    "build": "tsc -b && vite build",
+    "build:client": "vite build --outDir dist/client",
+    "build:server": "vite build --outDir dist/server --ssr client/entry-server.js",
+    "build": "npm run build:client && npm run build:server",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prod": "npx pm2 start server/server.config.cjs --env production"
   },
   "dependencies": {
-    "@inftechsol/reactstrap-form-validation": "^0.3.9",
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "dotenv-expand": "^12.0.3",
     "express": "^5.1.0",
@@ -22,12 +26,14 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-google-recaptcha": "^3.1.0",
+    "react-google-recaptcha-v3": "^1.11.0",
     "react-router": "^7.8.2",
     "react-toastify": "^11.0.5",
     "reactstrap": "^9.2.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/isomorphic-fetch": "^0.0.39",
     "@types/jsonwebtoken": "^9.0.10",

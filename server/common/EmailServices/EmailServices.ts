@@ -1,29 +1,32 @@
 import express from 'express';
-const router = express.Router();
 import nodemailer from 'nodemailer';
 import {log, mailUrl} from '../QueryHelpers.ts';
+const router = express.Router();
 const transporter = nodemailer.createTransport(mailUrl);
 
-router.post('/sendfromcontact', async (req, res) => {
-    const body = req.body;
-    const { kuldoEmail, kuldoNev, kuldoTelefon, targy, uzenet } = body;
+router.post('/sendfromcontact', (req, res) => {
+    const { nev, email, telefon, ok, uzenet } = req.body;
 
-    if (!kuldoEmail || !kuldoNev || !kuldoTelefon || !targy || !uzenet) {
-        res.status(400).send({ err: "Nincs küldő e-mail címe / neve / telefonszáma, tárgy vagy üzenet! Kérjük ellenőrizze a mezőket!" })
+    if (!nev || !email || !telefon || !uzenet || !ok) {
+        res.status(400).send({ err: "Nincs a név / e-mail cím / telefonszáma / tárgy / üzenet kitöltve! Kérjük ellenőrizze a mezőket!" })
     }
 
     transporter.sendMail(
         {
-            from: `${kuldoNev} <${kuldoEmail}>`, // sender address
+            envelope: {
+              from: email, to: process.env.foEmail
+            },
+            from: `${nev} <${email}>`, // sender address
+            replyTo: email,
             to: process.env.foEmail, // list of receivers
-            subject: `${targy}`, // Subject line
+            subject: `${ok}`, // Subject line
             html: `<b>Kedves ${process.env.foNev}!</b><br><br>
-            Az én nevem: ${kuldoNev}.<br>
-            Telefonszámom: ${kuldoTelefon}.<br>
-            Üzenetem tárgya: ${kuldoTelefon}.<br>
+            Az én nevem: ${nev}.<br>
+            Telefonszámom: ${telefon}.<br><br>
+
             ${uzenet}<br><br>
             Tisztelettel:<br>
-            ${kuldoNev}<br>` // html body
+            ${nev}<br>` // html body
         },
         (err) => {
             if (!err) {

@@ -8,11 +8,12 @@ export type kapcsolatObj = {
     kapcsolatleiras: string,
 }
 
-export type emailObj = {
+export type formDataObj = {
     ok?: string,
     nev?: string,
     email?: string,
     telefon?: string,
     uzenet?: string,
     toEmail?: string,
+    privacyPolicy: boolean
 }

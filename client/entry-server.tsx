@@ -5,7 +5,6 @@ import {StaticRouter} from "react-router";
 import {ToastContainer} from "react-toastify";
 
 export function render(url: string) {
-    console.log(url);
     const html = renderToString(
         <React.StrictMode>
             <StaticRouter location={url}>

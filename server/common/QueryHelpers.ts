@@ -16,6 +16,7 @@ dotenvExpand.expand(dotenv.config({
     path: envPath,
 }));
 
+const logPath: string = path.resolve((dirname), `../${process.env.logDir}`);
 const mailUrl = `smtps://${process.env.mailserverUser}:${process.env.mailserverPassword}@${process.env.mailserverHost}`;
 
 const db_params = {
@@ -30,15 +31,18 @@ const pool = createPool(db_params);
 const log = (endPoint: string, error: QueryError | Error | null) => {
     const date = moment(new Date()).format("YYYY-MM-DD");
     const time = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-    const filePath: string = `${process.env.logDir}/${date}_error.log`;
-    const isDirExist = existsSync(dirname + process.env.logDir);
-    const logger = createWriteStream(filePath, { flags: "a" });
+    const filePath: string = `${logPath}/${date}_error.log`;
+    const isDirExist = existsSync(logPath);
+
 
     if (!isDirExist) {
-        mkdirSync(dirname + process.env.logDir);
+        mkdirSync(logPath);
+        const logger = createWriteStream(filePath, { flags: "a" });
+        logger.write(`ERROR: ${endPoint}: ${time} - ${error}\n`);
+    } else {
+        const logger = createWriteStream(filePath, { flags: "a" });
+        logger.write(`ERROR: ${endPoint}: ${time} - ${error}\n`);
     }
-
-    logger.write(`ERROR: ${endPoint}: ${time} - ${error}\n`);
 };
 
 const quote = (val: never) => (val);

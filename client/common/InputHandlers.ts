@@ -1,6 +1,9 @@
 import type {ChangeEvent, Dispatch, RefObject, SetStateAction} from "react";
 
-const handleInputChange = (e: ChangeEvent<HTMLInputElement>, obj: unknown, setObj: Dispatch<SetStateAction<unknown>>) => {
+function handleInputChange<T> (
+    e: ChangeEvent<HTMLInputElement>, obj: T, setObj: Dispatch<SetStateAction<T>>
+) {
+    console.log(e, obj, setObj);
     /* if (!inputName) { */
     const { target } = e;
     const { type, checked, name } = target;
@@ -13,14 +16,14 @@ const handleInputChange = (e: ChangeEvent<HTMLInputElement>, obj: unknown, setOb
             } else {
                 value = value.slice(0, -1);
             }
+        } else if (!pattern) {
+            value = target.value;
         }
     } else {
         value = checked;
     }
 
     setObj({
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
         ...obj,
         [name]: value
     });

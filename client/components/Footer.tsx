@@ -2,7 +2,10 @@ import React from 'react';
 
 function Footer(): React.ReactElement {
     return (
-        <footer>Designed and created by <a target={"_blank"} href={"https://inftechsol.hu"}>&nbsp;Inftechsol</a></footer>
+        <footer className="contact-footer">
+            <div><strong>Telefon:</strong> +36 30 923 6736</div>
+            <div><strong>Email:</strong> oxigentisztitas@gmail.com</div>
+        </footer>
     );
 }
 

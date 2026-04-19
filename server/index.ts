@@ -4,6 +4,8 @@ import fs from "node:fs";
 import { fileURLToPath } from 'node:url'
 import path from "node:path";
 import { createServer as createViteServer } from "vite";
+import bodyParser from "body-parser";
+import cors from 'cors';
 import ReChaptchaServices from "./common/ReChaptcha/ReChaptcha.ts";
 import EmailServices from "./common/EmailServices/EmailServices.ts";
 import KapcsolatServices from "./PublicServices/kapcsolat/KapcsolatServices.tsx";
@@ -22,6 +24,15 @@ const vite = await createViteServer({
 })
 
 app.use(vite.middlewares)
+app.use(cors())
+
+const isDev = process.env.NODE_ENV === 'development';
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
 
 app.use('/static', express.static('dist'));
 
@@ -37,9 +48,15 @@ app.use("/api/kapcsolat", KapcsolatServices);
 app.get('*all', async (req: Request, res: Response) => {
     const url: string = req.originalUrl;
     try {
-        let template = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
+        let template = fs.readFileSync(path.resolve(__dirname,
+            isDev ? '../index.html' : '../dist/client/index.html'), 'utf8');
         template = await vite.transformIndexHtml(url, template);
-        const { render } = await vite.ssrLoadModule(path.resolve(__dirname, '../client/entry-server.tsx'));
+
+        const { render } = isDev ?
+            await vite.ssrLoadModule(path.resolve(__dirname, '../client/entry-server.tsx')) :
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            await import('../dist/server/entry-server.js');
         const appHtml = await render(url);
         const html = template.replace(`<!--ssr-outlet-->`, () => appHtml.html)
         res.status(200).send(html);

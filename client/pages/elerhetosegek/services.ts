@@ -48,7 +48,7 @@ export function checkRechaptcha(
             mode: 'cors',
             // cache: "no-cache",
             headers: {
-                response: token
+                gtoken: token
             }
         },
         fnDone
