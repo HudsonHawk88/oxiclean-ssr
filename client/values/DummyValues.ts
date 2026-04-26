@@ -50,7 +50,7 @@ export const services = [
 ]
 
 const staticUrl = `https://oxiclean.hu/static`;
-const referenciakUrl = `${staticUrl}/referenciak`;
+const referenciakUrl = `${staticUrl}/images/referenciak`;
 
 export const referenciak = [
     {
